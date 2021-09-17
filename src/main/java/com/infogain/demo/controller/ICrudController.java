@@ -2,6 +2,7 @@ package com.infogain.demo.controller;
 
 import com.infogain.demo.exception.BadArgumentsException;
 import com.infogain.demo.model.Model;
+import com.infogain.demo.model.UpdatedDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public interface ICrudController<T extends Model> {
     ResponseEntity<List<T>> getResources();
 
     @PutMapping("/{id}")
-    ResponseEntity<UUID> updateResource(@PathVariable UUID id, @RequestBody T customerModel);
+    ResponseEntity<UpdatedDTO> updateResource(@PathVariable UUID id, @RequestBody T customerModel);
 
     default void preventUpdateThroughPost(T model){
         if (model.getId() != null) {

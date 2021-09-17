@@ -1,6 +1,8 @@
 package com.infogain.demo.controller;
 
+import com.infogain.demo.enums.ResourceStateEnum;
 import com.infogain.demo.model.CustomerModel;
+import com.infogain.demo.model.UpdatedDTO;
 import com.infogain.demo.service.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,7 @@ public class CustomerController implements ICrudController<CustomerModel> {
     }
 
     @Override
-    public ResponseEntity<UUID> updateResource(UUID id, CustomerModel customerModel) {
-        return ResponseEntity.ok(service.updateEntity(id, customerModel));
+    public ResponseEntity<UpdatedDTO> updateResource(UUID id, CustomerModel customerModel) {
+        return ResponseEntity.ok(new UpdatedDTO(service.updateEntity(id, customerModel), ResourceStateEnum.UPDATED));
     }
 }
