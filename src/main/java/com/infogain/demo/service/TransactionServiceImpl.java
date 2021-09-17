@@ -1,6 +1,7 @@
 package com.infogain.demo.service;
 
 import com.infogain.demo.exception.ResourceNotFoundException;
+import com.infogain.demo.model.CustomerModel;
 import com.infogain.demo.model.TransactionModel;
 import com.infogain.demo.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,14 @@ import java.util.stream.StreamSupport;
 @Service
 public class TransactionServiceImpl implements ICrudService<TransactionModel> {
     private final TransactionRepository repository;
+    private final CustomerServiceImpl customerService;
+
+    public TransactionModel createTransactionForCustomer(UUID customerId, TransactionModel transactionModel){
+        CustomerModel customerModel = customerService.getEntity(customerId);
+        transactionModel.setCustomerModel(customerModel);
+
+        return createEntity(transactionModel);
+    }
 
     @Override
     public TransactionModel createEntity(TransactionModel model) {
@@ -43,8 +52,10 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
 
     @Override
     public UUID updateEntity(UUID id, TransactionModel model) {
-        model.setId(id);
-        return repository.save(model).getId();
+        TransactionModel transactionModel = getEntity(id);
+        transactionModel.setValue(model.getValue());
+
+        return repository.save(transactionModel).getId();
     }
 
     @Override

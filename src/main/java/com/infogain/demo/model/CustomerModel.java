@@ -16,4 +16,11 @@ public class CustomerModel extends Model {
     @JsonManagedReference
     @OneToMany(mappedBy = "customerModel")
     private List<TransactionModel> transactions = Collections.emptyList();
+
+    public CustomerModel(String name, String personalId){
+        this.name = name;
+        this.personalId = personalId;
+    }
+
+    public CustomerModel(){}
 }

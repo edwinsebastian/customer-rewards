@@ -1,8 +1,7 @@
 package com.infogain.demo.controller;
 
 import com.infogain.demo.enums.ResourceStateEnum;
-import com.infogain.demo.model.CustomerModel;
-import com.infogain.demo.model.UpdatedDTO;
+import com.infogain.demo.model.*;
 import com.infogain.demo.service.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +14,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/v1/customer")
-public class CustomerController implements ICrudController<CustomerModel> {
+public class CustomerController implements ICrudController<CustomerModel, CustomerDTO, UpdatedDTO> {
     private final CustomerServiceImpl service;
 
     @Override
-    public ResponseEntity<CustomerModel> createResource(CustomerModel customerModel) {
-        preventUpdateThroughPost(customerModel);
-        return ResponseEntity.ok(service.createEntity(customerModel));
+    public ResponseEntity<UpdatedDTO> createResource(CustomerDTO customerDTO) {
+        CustomerModel customerModel = CustomerDTO.toCustomerModel(customerDTO);
+        UpdatedDTO updatedDTO = new UpdatedDTO(service.createEntity(customerModel).getId(), ResourceStateEnum.CREATED);
+
+        return ResponseEntity.ok(updatedDTO);
     }
 
     @Override
@@ -35,7 +36,10 @@ public class CustomerController implements ICrudController<CustomerModel> {
     }
 
     @Override
-    public ResponseEntity<UpdatedDTO> updateResource(UUID id, CustomerModel customerModel) {
-        return ResponseEntity.ok(new UpdatedDTO(service.updateEntity(id, customerModel), ResourceStateEnum.UPDATED));
+    public ResponseEntity<UpdatedDTO> updateResource(UUID id, CustomerDTO customerDTO) {
+        CustomerModel customerModel = CustomerDTO.toCustomerModel(customerDTO);
+        UpdatedDTO updatedDTO = new UpdatedDTO(service.updateEntity(id, customerModel), ResourceStateEnum.UPDATED);
+
+        return ResponseEntity.ok(updatedDTO);
     }
 }

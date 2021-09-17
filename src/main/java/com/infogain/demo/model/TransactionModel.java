@@ -17,4 +17,11 @@ public class TransactionModel extends Model {
     @ManyToOne
     @JoinColumn(columnDefinition = "customer_model_id")
     private CustomerModel customerModel = new CustomerModel();
+
+    public TransactionModel(double value, Date date){
+        this.value = value;
+        this.setDate(date);
+    }
+
+    public TransactionModel(){}
 }

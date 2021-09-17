@@ -1,6 +1,9 @@
 package com.infogain.demo.controller;
 
+import com.infogain.demo.enums.ResourceStateEnum;
+import com.infogain.demo.model.TransactionDTO;
 import com.infogain.demo.model.TransactionModel;
+import com.infogain.demo.model.UpdatedDTO;
 import com.infogain.demo.service.TransactionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +16,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/v1/transaction")
-public class TransactionController implements ICrudController<TransactionModel>{
+public class TransactionController implements ICrudController<TransactionModel, TransactionDTO, UpdatedDTO>{
     private final TransactionServiceImpl service;
 
     @Override
-    public ResponseEntity<TransactionModel> createResource(TransactionModel transactionModel) {
-        preventUpdateThroughPost(transactionModel);
-        return ResponseEntity.ok(service.createEntity(transactionModel));
+    public ResponseEntity<UpdatedDTO> createResource(TransactionDTO transactionDTO) {
+        TransactionModel transactionModel = TransactionDTO.toTransactionModel(transactionDTO);
+        UpdatedDTO updatedDTO = new UpdatedDTO(
+            service.createTransactionForCustomer(
+                transactionDTO.getCustomerId(),
+                transactionModel
+            ).getId(),
+            ResourceStateEnum.CREATED);
+
+        return ResponseEntity.ok(updatedDTO);
     }
 
     @Override
@@ -33,7 +43,10 @@ public class TransactionController implements ICrudController<TransactionModel>{
     }
 
     @Override
-    public ResponseEntity<UUID> updateResource(UUID id, TransactionModel customerModel) {
-        return ResponseEntity.ok(service.updateEntity(id, customerModel));
+    public ResponseEntity<UpdatedDTO> updateResource(UUID id, TransactionDTO transactionDTO) {
+        TransactionModel transactionModel = TransactionDTO.toTransactionModel(transactionDTO);
+        UpdatedDTO updatedDTO = new UpdatedDTO(service.updateEntity(id, transactionModel), ResourceStateEnum.UPDATED);
+
+        return ResponseEntity.ok(updatedDTO);
     }
 }
