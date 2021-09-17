@@ -3,11 +3,17 @@ package com.infogain.demo.controller;
 import com.infogain.demo.enums.ResourceStateEnum;
 import com.infogain.demo.model.*;
 import com.infogain.demo.service.CustomerServiceImpl;
+import com.infogain.demo.service.RewardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +22,7 @@ import java.util.UUID;
 @RequestMapping("/v1/customer")
 public class CustomerController implements ICrudController<CustomerModel, CustomerDTO, UpdatedDTO> {
     private final CustomerServiceImpl service;
+    private final RewardService rewardService;
 
     @Override
     public ResponseEntity<UpdatedDTO> createResource(CustomerDTO customerDTO) {
@@ -41,5 +48,11 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
         UpdatedDTO updatedDTO = new UpdatedDTO(service.updateEntity(id, customerModel), ResourceStateEnum.UPDATED);
 
         return ResponseEntity.ok(updatedDTO);
+    }
+
+    @GetMapping("/{customerId}/reward")
+    public ResponseEntity<RewardDTO> getCustomerTransactions(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
+        RewardDTO rewardDTO = new RewardDTO(rewardService.getTransactionsFromCustomerBetweenDates(customerId, fromDate, toDate));
+        return ResponseEntity.ok(rewardDTO);
     }
 }

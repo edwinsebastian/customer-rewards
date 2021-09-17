@@ -2,13 +2,17 @@ package com.infogain.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class TransactionModel extends Model {
     private double value;

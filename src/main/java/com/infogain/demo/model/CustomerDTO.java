@@ -1,7 +1,9 @@
 package com.infogain.demo.model;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Data
 public class CustomerDTO {
     private String name;
