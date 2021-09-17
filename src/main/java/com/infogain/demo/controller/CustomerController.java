@@ -5,7 +5,7 @@ import com.infogain.demo.service.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,22 +17,23 @@ public class CustomerController implements ICrudController<CustomerModel> {
     private final CustomerServiceImpl service;
 
     @Override
-    public ResponseEntity<CustomerModel> createCustomer(CustomerModel customerModel) {
+    public ResponseEntity<CustomerModel> createResource(CustomerModel customerModel) {
+        preventUpdateThroughPost(customerModel);
         return ResponseEntity.ok(service.createEntity(customerModel));
     }
 
     @Override
-    public ResponseEntity<CustomerModel> getCustomer(UUID id) {
+    public ResponseEntity<CustomerModel> getResource(UUID id) {
         return ResponseEntity.ok(service.getEntity(id));
     }
 
     @Override
-    public ResponseEntity<List<CustomerModel>> getCostumers() {
+    public ResponseEntity<List<CustomerModel>> getResources() {
         return ResponseEntity.ok(service.getEntities());
     }
 
     @Override
-    public ResponseEntity<UUID> updateCustomer(UUID id, CustomerModel customerModel) {
+    public ResponseEntity<UUID> updateResource(UUID id, CustomerModel customerModel) {
         return ResponseEntity.ok(service.updateEntity(id, customerModel));
     }
 }
