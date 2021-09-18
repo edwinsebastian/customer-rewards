@@ -43,6 +43,9 @@ class CustomerControllerTest {
     static UpdatedDTO updatedDTOCREATED;
     static UpdatedDTO updatedDTOUPDATED;
 
+    static double transactionValue;
+    static int calculatedPoints;
+    static Date transactionDate;
     static TransactionModel transactionModel;
     static TransactionDTO transactionDTO;
     static TransactionRewardDTO transactionRewardDTO;
@@ -60,9 +63,13 @@ class CustomerControllerTest {
         updatedDTOCREATED = new UpdatedDTO(customerModel.getId(), ResourceStateEnum.CREATED);
         updatedDTOUPDATED = new UpdatedDTO(customerModel.getId(), ResourceStateEnum.UPDATED);
 
-        transactionModel = new TransactionModel(120.0, new Date());
+        transactionValue = 120;
+        //for a value of 120 must be 90 points
+        calculatedPoints = RewardService.pointsCalculation(transactionValue);
+        transactionDate = new Date();
+        transactionModel = new TransactionModel(transactionValue, transactionDate);
         transactionDTO = new TransactionDTO(transactionModel);
-        transactionRewardDTO = new TransactionRewardDTO(transactionDTO, RewardService.pointsCalculation(120));
+        transactionRewardDTO = new TransactionRewardDTO(transactionDTO, calculatedPoints);
         transactionRewardList.add(transactionRewardDTO);
         rewardDTO = new RewardDTO(transactionRewardList);
     }
@@ -122,9 +129,10 @@ class CustomerControllerTest {
         ResponseEntity<RewardDTO> httpResponse = controller.getCustomerPointsReward(customerModel.getId(), new Date(), new Date());
 
         Assert.assertEquals(httpResponse.getStatusCode(), HttpStatus.OK);
-        Assert.assertEquals(httpResponse.getBody().getTransactions().get(0).getRewardPoints(), transactionRewardList.get(0).getRewardPoints());
+        Assert.assertEquals(httpResponse.getBody().getTransactions().get(0).getRewardPoints(), calculatedPoints);
         Assert.assertEquals(httpResponse.getBody().getTransactions().get(0).getTransactionDTO().getCustomerId(), transactionRewardList.get(0).getTransactionDTO().getCustomerId());
         Assertions.assertEquals(httpResponse.getBody().getTransactions().get(0).getTransactionDTO().getValue(), transactionRewardList.get(0).getTransactionDTO().getValue());
         Assert.assertEquals(httpResponse.getBody().getTransactions().get(0).getTransactionDTO().getDate(), transactionRewardList.get(0).getTransactionDTO().getDate());
+        Assert.assertEquals(httpResponse.getBody().getTotalRewardPoints(), rewardDTO.getTotalRewardPoints());
     }
 }

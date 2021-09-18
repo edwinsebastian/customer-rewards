@@ -5,6 +5,8 @@ import com.infogain.demo.model.CustomerModel;
 import com.infogain.demo.model.TransactionModel;
 import com.infogain.demo.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,10 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
     private final TransactionRepository repository;
     private final CustomerServiceImpl customerService;
 
+    Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
+
     public TransactionModel createTransactionForCustomer(UUID customerId, TransactionModel transactionModel){
+        logger.info("createTransactionForCustomer {} {}", customerId, transactionModel);
         CustomerModel customerModel = customerService.getEntity(customerId);
         transactionModel.setCustomerModel(customerModel);
 
@@ -28,11 +33,13 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
 
     @Override
     public TransactionModel createEntity(TransactionModel model) {
+        logger.info("createEntity {}", model);
         return repository.save(model);
     }
 
     @Override
     public TransactionModel getEntity(UUID id) {
+        logger.info("getEntity {}", id);
         TransactionModel transactionModel = null;
         try {
             transactionModel = repository.findById(id).get();
@@ -45,6 +52,7 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
 
     @Override
     public List<TransactionModel> getEntities() {
+        logger.info("getEntities");
         return StreamSupport
                 .stream(repository.findAll().spliterator(), true)
                 .collect(Collectors.toList());
@@ -52,6 +60,7 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
 
     @Override
     public UUID updateEntity(UUID id, TransactionModel model) {
+        logger.info("updateEntity {} {}", id, model);
         TransactionModel transactionModel = getEntity(id);
         transactionModel.setValue(model.getValue());
 
@@ -60,6 +69,7 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
 
     @Override
     public UUID delete(UUID id) {
+        logger.info("delete {} ", id);
         repository.deleteById(id);
         return id;
     }

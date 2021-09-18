@@ -6,6 +6,8 @@ import com.infogain.demo.model.TransactionModel;
 import com.infogain.demo.model.UpdatedDTO;
 import com.infogain.demo.service.TransactionServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,11 @@ import java.util.UUID;
 public class TransactionController implements ICrudController<TransactionModel, TransactionDTO, UpdatedDTO>{
     private final TransactionServiceImpl service;
 
+    Logger logger = LoggerFactory.getLogger(TransactionController.class);
+
     @Override
     public ResponseEntity<UpdatedDTO> createResource(TransactionDTO transactionDTO) {
+        logger.info("createResource param: {}", transactionDTO);
         TransactionModel transactionModel = TransactionDTO.toTransactionModel(transactionDTO);
         UpdatedDTO updatedDTO = new UpdatedDTO(
             service.createTransactionForCustomer(
@@ -34,16 +39,19 @@ public class TransactionController implements ICrudController<TransactionModel, 
 
     @Override
     public ResponseEntity<TransactionModel> getResource(UUID id) {
+        logger.info("getResource param: {}", id);
         return ResponseEntity.ok(service.getEntity(id));
     }
 
     @Override
     public ResponseEntity<List<TransactionModel>> getResources() {
+        logger.info("getResources");
         return ResponseEntity.ok(service.getEntities());
     }
 
     @Override
     public ResponseEntity<UpdatedDTO> updateResource(UUID id, TransactionDTO transactionDTO) {
+        logger.info("updateResource param: {} {}", id, transactionDTO);
         TransactionModel transactionModel = TransactionDTO.toTransactionModel(transactionDTO);
         UpdatedDTO updatedDTO = new UpdatedDTO(service.updateEntity(id, transactionModel), ResourceStateEnum.UPDATED);
 
