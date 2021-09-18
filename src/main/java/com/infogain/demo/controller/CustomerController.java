@@ -5,6 +5,8 @@ import com.infogain.demo.model.*;
 import com.infogain.demo.service.CustomerServiceImpl;
 import com.infogain.demo.service.RewardService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,8 +26,11 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
     private final CustomerServiceImpl service;
     private final RewardService rewardService;
 
+    Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
     @Override
     public ResponseEntity<UpdatedDTO> createResource(CustomerDTO customerDTO) {
+        logger.info("createResource param: {}", customerDTO);
         CustomerModel customerModel = CustomerDTO.toCustomerModel(customerDTO);
         UpdatedDTO updatedDTO = new UpdatedDTO(service.createEntity(customerModel).getId(), ResourceStateEnum.CREATED);
 
@@ -34,6 +39,7 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
 
     @Override
     public ResponseEntity<CustomerModel> getResource(UUID id) {
+        logger.info("getResource param: {}", id);
         return ResponseEntity.ok(service.getEntity(id));
     }
 
@@ -44,6 +50,7 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
 
     @Override
     public ResponseEntity<UpdatedDTO> updateResource(UUID id, CustomerDTO customerDTO) {
+        logger.info("updateResource param: {} {}", id, customerDTO);
         CustomerModel customerModel = CustomerDTO.toCustomerModel(customerDTO);
         UpdatedDTO updatedDTO = new UpdatedDTO(service.updateEntity(id, customerModel), ResourceStateEnum.UPDATED);
 
@@ -51,8 +58,10 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
     }
 
     @GetMapping("/{customerId}/reward")
-    public ResponseEntity<RewardDTO> getCustomerTransactions(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
+    public ResponseEntity<RewardDTO> getCustomerPointsReward(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
+        logger.info("getCustomerPointsReward param: {} {} {}", customerId, fromDate, toDate);
         RewardDTO rewardDTO = new RewardDTO(rewardService.getTransactionsFromCustomerBetweenDates(customerId, fromDate, toDate));
+
         return ResponseEntity.ok(rewardDTO);
     }
 }

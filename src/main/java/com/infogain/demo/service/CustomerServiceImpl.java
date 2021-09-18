@@ -4,6 +4,8 @@ import com.infogain.demo.exception.ResourceNotFoundException;
 import com.infogain.demo.model.CustomerModel;
 import com.infogain.demo.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,13 +19,17 @@ import java.util.stream.StreamSupport;
 public class CustomerServiceImpl implements ICrudService<CustomerModel> {
     private final CustomerRepository repository;
 
+    Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
+
     @Override
     public CustomerModel createEntity(CustomerModel model) {
+        logger.info("createEntity {}", model);
         return repository.save(model);
     }
 
     @Override
     public CustomerModel getEntity(UUID id) {
+        logger.info("getEntity {}", id);
         CustomerModel customerModel = null;
         try {
             customerModel = repository.findById(id).get();
@@ -36,6 +42,7 @@ public class CustomerServiceImpl implements ICrudService<CustomerModel> {
 
     @Override
     public List<CustomerModel> getEntities() {
+        logger.info("getEntities");
         return StreamSupport
                 .stream(repository.findAll().spliterator(), true)
                 .collect(Collectors.toList());
@@ -43,21 +50,25 @@ public class CustomerServiceImpl implements ICrudService<CustomerModel> {
 
     @Override
     public UUID updateEntity(UUID id, CustomerModel model) {
+        logger.info("updateEntity {} {}", id, model);
         model.setId(id);
         return repository.save(model).getId();
     }
 
     @Override
     public UUID delete(UUID id) {
+        logger.info("delete {} ", id);
         repository.deleteById(id);
         return id;
     }
 
     public CustomerModel getCustomerByPersonalId(String personalId){
+        logger.info("getCustomerByPersonalId {} ", personalId);
         return repository.getCustomerModelByPersonalIdIsLike(personalId).get();
     }
 
     public UUID getIdByPersonalId(String personalId){
+        logger.info("getIdByPersonalId {} ", personalId);
         return getCustomerByPersonalId(personalId).getId();
     }
 }

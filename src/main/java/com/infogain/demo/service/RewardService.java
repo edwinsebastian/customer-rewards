@@ -2,7 +2,6 @@ package com.infogain.demo.service;
 
 import com.infogain.demo.model.TransactionDTO;
 import com.infogain.demo.model.TransactionRewardDTO;
-import com.infogain.demo.repository.CustomerRepository;
 import com.infogain.demo.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,14 +31,14 @@ public class RewardService {
             .collect(Collectors.toList());
     }
 
-    public int pointsCalculation(double value){
+    static public int pointsCalculation(double value){
         int points = twoPointsOverHundredDollar(value);
         points += onePointOverFiftyDollar(value);
 
         return points;
     }
 
-    private int twoPointsOverHundredDollar(double value){
+    static private int twoPointsOverHundredDollar(double value){
         Long n = Math.round(value) - 100;
         if(n <= 0){
             return 0;
@@ -48,7 +47,7 @@ public class RewardService {
         return n.intValue() * 2;
     }
 
-    private int onePointOverFiftyDollar(double value){
+    static private int onePointOverFiftyDollar(double value){
         double d = value/50;
         Long n = Math.round(d);
         if (n < 1){
