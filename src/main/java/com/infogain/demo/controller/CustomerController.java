@@ -51,8 +51,9 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
     }
 
     @GetMapping("/{customerId}/reward")
-    public ResponseEntity<RewardDTO> getCustomerTransactions(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
+    public ResponseEntity<RewardDTO> getCustomerPointsReward(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
         RewardDTO rewardDTO = new RewardDTO(rewardService.getTransactionsFromCustomerBetweenDates(customerId, fromDate, toDate));
+
         return ResponseEntity.ok(rewardDTO);
     }
 }
