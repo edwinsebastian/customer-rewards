@@ -16,5 +16,5 @@ public interface ICrudService<T extends Model> {
 
     UUID updateEntity(UUID id, T model);
 
-    UUID delete(UUID id);
+    UUID deleteEntity(UUID id);
 }

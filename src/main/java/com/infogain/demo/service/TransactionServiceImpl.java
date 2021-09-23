@@ -68,8 +68,10 @@ public class TransactionServiceImpl implements ICrudService<TransactionModel> {
     }
 
     @Override
-    public UUID delete(UUID id) {
+    public UUID deleteEntity(UUID id) {
         logger.info("delete {} ", id);
+        //validate if transaction exist
+        this.getEntity(id);
         repository.deleteById(id);
         return id;
     }

@@ -20,4 +20,7 @@ public interface ICrudController<T extends Model, R, S> {
 
     @PutMapping("/{id}")
     ResponseEntity<S> updateResource(@PathVariable UUID id, @RequestBody R customerModel);
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<S> deleteResource(@PathVariable UUID id);
 }

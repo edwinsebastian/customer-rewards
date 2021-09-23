@@ -2,12 +2,17 @@ package com.infogain.demo.service;
 
 import com.infogain.demo.exception.ResourceNotFoundException;
 import com.infogain.demo.model.CustomerModel;
+import com.infogain.demo.model.TransactionRewardDTO;
 import com.infogain.demo.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -18,6 +23,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class CustomerServiceImpl implements ICrudService<CustomerModel> {
     private final CustomerRepository repository;
+    private final RewardService rewardService;
 
     Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
@@ -56,8 +62,10 @@ public class CustomerServiceImpl implements ICrudService<CustomerModel> {
     }
 
     @Override
-    public UUID delete(UUID id) {
+    public UUID deleteEntity(UUID id) {
         logger.info("delete {} ", id);
+        //validate if customer exist
+        this.getEntity(id);
         repository.deleteById(id);
         return id;
     }
@@ -70,5 +78,13 @@ public class CustomerServiceImpl implements ICrudService<CustomerModel> {
     public UUID getIdByPersonalId(String personalId){
         logger.info("getIdByPersonalId {} ", personalId);
         return getCustomerByPersonalId(personalId).getId();
+    }
+
+    public List<TransactionRewardDTO> getCustomerPointsReward(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
+        logger.info("getCustomerPointsReward param: {} {} {}", customerId, fromDate, toDate);
+        //validate if customer exist
+        this.getEntity(customerId);
+
+        return rewardService.getTransactionsFromCustomerBetweenDates(customerId, fromDate, toDate);
     }
 }

@@ -57,4 +57,12 @@ public class TransactionController implements ICrudController<TransactionModel, 
 
         return ResponseEntity.ok(updatedDTO);
     }
+
+    @Override
+    public ResponseEntity<UpdatedDTO> deleteResource(UUID id) {
+        logger.info("deleteResource param: {}", id);
+        UpdatedDTO updatedDTO = new UpdatedDTO(service.deleteEntity(id), ResourceStateEnum.DELETED);
+
+        return ResponseEntity.ok(updatedDTO);
+    }
 }

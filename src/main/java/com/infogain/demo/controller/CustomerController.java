@@ -24,7 +24,6 @@ import java.util.UUID;
 @RequestMapping("/v1/customer")
 public class CustomerController implements ICrudController<CustomerModel, CustomerDTO, UpdatedDTO> {
     private final CustomerServiceImpl service;
-    private final RewardService rewardService;
 
     Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -57,10 +56,18 @@ public class CustomerController implements ICrudController<CustomerModel, Custom
         return ResponseEntity.ok(updatedDTO);
     }
 
+    @Override
+    public ResponseEntity<UpdatedDTO> deleteResource(UUID id) {
+        logger.info("deleteResource param: {}", id);
+        UpdatedDTO updatedDTO = new UpdatedDTO(service.deleteEntity(id), ResourceStateEnum.DELETED);
+
+        return ResponseEntity.ok(updatedDTO);
+    }
+
     @GetMapping("/{customerId}/reward")
     public ResponseEntity<RewardDTO> getCustomerPointsReward(@PathVariable UUID customerId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate){
         logger.info("getCustomerPointsReward param: {} {} {}", customerId, fromDate, toDate);
-        RewardDTO rewardDTO = new RewardDTO(rewardService.getTransactionsFromCustomerBetweenDates(customerId, fromDate, toDate));
+        RewardDTO rewardDTO = new RewardDTO(service.getCustomerPointsReward(customerId, fromDate, toDate));
 
         return ResponseEntity.ok(rewardDTO);
     }
