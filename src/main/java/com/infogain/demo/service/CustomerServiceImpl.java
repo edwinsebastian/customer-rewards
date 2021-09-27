@@ -57,6 +57,8 @@ public class CustomerServiceImpl implements ICrudService<CustomerModel> {
     @Override
     public UUID updateEntity(UUID id, CustomerModel model) {
         logger.info("updateEntity {} {}", id, model);
+        //validate if customer exist
+        this.getEntity(id);
         model.setId(id);
         return repository.save(model).getId();
     }

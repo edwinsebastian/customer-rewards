@@ -10,16 +10,29 @@
 }
 ```
 ### response
+status: 200
 ```
 {
     "id": "843ccabb-c2c6-4551-94df-700616cc340e",
     "state": "CREATED"
 }
 ```
+status: 404
+```
+{
+    "timestamp": "2021-09-27T16:56:12.388+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "trace": "com.infogain.demo.exception.ResourceNotFoundException: Customer not found....",
+    "message": "Customer not found.",
+    "path": "/v1/transaction"
+}
+```
 ---
 ### get rewards points for customer
 ### GET /v1/customer/042028f2-2b93-4031-8c7a-acf40b5a32c8/reward
 ### response
+status: 200
 ```
 {
     "transactions": [
@@ -67,13 +80,24 @@
     "totalRewardPoints": 1140
 }
 ```
-
+status 404
+```
+{
+    "timestamp": "2021-09-27T16:54:57.014+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "trace": "com.infogain.demo.exception.ResourceNotFoundException: Customer not found....",
+    "message": "Customer not found.",
+    "path": "/v1/customer/042028f2-2b93-4031-8c7a-acf40b5a32c8/reward"
+}
+```
 ---
 ---
 ## CRUD
 #### get all customers
 ### ```GET /v1/customer``` 
 ### response
+status: 200
 ```
 [
     {
@@ -175,7 +199,8 @@
 ---
 #### get single customer
 ### ```GET /v1/customer/2f919434-ed72-434a-bc57-30341a18ee66``` 
-### response
+### responses
+status: 200
 ```
 {
     "id": "2f919434-ed72-434a-bc57-30341a18ee66",
@@ -235,6 +260,18 @@
     ]
 }
 ```
+
+status: 404
+```
+{
+    "timestamp": "2021-09-27T16:04:10.261+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "trace": "com.infogain.demo.exception.ResourceNotFoundException: Customer not found..,
+    "message": "Customer not found.",
+    "path": "/v1/customer/2f919434-ed72-434a-bc57-30341a18ee66"
+}
+```
 ---
 #### create customer
 ### ```POST /v1/customer``` 
@@ -246,6 +283,7 @@
 }
 ```
 ### response
+status: 200
 ```
 {
     "id": "55234540-2220-4082-a786-f673d8fe22e9",
@@ -262,17 +300,30 @@
     "name": "Ryan Albert"
 }
 ```
-### response
+### responses
+status: 200
 ```
 {
     "id": "55234540-2220-4082-a786-f673d8fe22e9",
     "state": "UPDATED"
 }
 ```
+status: 404
+```
+{
+    "timestamp": "2021-09-27T16:49:54.846+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "trace": "com.infogain.demo.exception.ResourceNotFoundException: Customer not found....",
+    "message": "Customer not found.",
+    "path": "/v1/customer/55234540-2220-4082-a786-f673d8fe22e9"
+}
+```
 ---
 #### get all transactions
 ### ```GET /v1/transaction``` 
 ### response
+status: 200
 ```
 [
     {
@@ -301,11 +352,22 @@
 #### get single transaction
 ### ```GET /v1/transaction/0513caab-1562-48b4-bf97-f1a311225bc3``` 
 ### response
+status: 200
 ```
 {
     "id": "0513caab-1562-48b4-bf97-f1a311225bc3",
     "value": 99.15,
     "date": "2021-08-11T22:39:48.000+00:00"
+}
+```
+```
+{
+    "timestamp": "2021-09-27T16:51:31.114+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "trace": "com.infogain.demo.exception.ResourceNotFoundException: Transaction not found....",
+    "message": "Transaction not found.",
+    "path": "/v1/transaction/0513caab-1562-48b4-bf97-f1a311225bc3"
 }
 ```
 ---
@@ -318,9 +380,22 @@
 }
 ```
 ### response
+status: 200
 ```
 {
     "id": "0513caab-1562-48b4-bf97-f1a311225bc3",
     "state": "UPDATED"
 }
+```
+status: 404
+```
+{
+    "timestamp": "2021-09-27T16:52:46.883+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "trace": "com.infogain.demo.exception.ResourceNotFoundException: Transaction not found....",
+    "message": "Transaction not found.",
+    "path": "/v1/transaction/acee9a2a-2ec1-40ea-b946-d0d0239ee813"
+}
+```
 ---

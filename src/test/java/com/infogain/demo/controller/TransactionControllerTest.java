@@ -1,6 +1,7 @@
 package com.infogain.demo.controller;
 
 import com.infogain.demo.enums.ResourceStateEnum;
+import com.infogain.demo.exception.ResourceNotFoundException;
 import com.infogain.demo.model.*;
 import com.infogain.demo.service.TransactionServiceImpl;
 import org.junit.Assert;

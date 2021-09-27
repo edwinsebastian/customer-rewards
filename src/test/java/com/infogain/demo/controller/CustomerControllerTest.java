@@ -137,7 +137,7 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerPointsReward() {
-        Mockito.when(rewardService.getTransactionsFromCustomerBetweenDates(any(), any(), any())).thenReturn(transactionRewardList);
+        Mockito.when(service.getCustomerPointsReward(any(), any(), any())).thenReturn(transactionRewardList);
 
         ResponseEntity<RewardDTO> httpResponse = controller.getCustomerPointsReward(customerModel.getId(), new Date(), new Date());
 
