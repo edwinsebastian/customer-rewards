@@ -42,6 +42,7 @@ class CustomerControllerTest {
 
     static UpdatedDTO updatedDTOCREATED;
     static UpdatedDTO updatedDTOUPDATED;
+    static UpdatedDTO updatedDTODELETED;
 
     static double transactionValue;
     static int calculatedPoints;
@@ -62,6 +63,7 @@ class CustomerControllerTest {
 
         updatedDTOCREATED = new UpdatedDTO(customerModel.getId(), ResourceStateEnum.CREATED);
         updatedDTOUPDATED = new UpdatedDTO(customerModel.getId(), ResourceStateEnum.UPDATED);
+        updatedDTODELETED = new UpdatedDTO(customerModel.getId(), ResourceStateEnum.DELETED);
 
         transactionValue = 120;
         //for a value of 120 must be 90 points
@@ -123,8 +125,19 @@ class CustomerControllerTest {
     }
 
     @Test
+    void deleteResource() {
+        Mockito.when(service.deleteEntity(any())).thenReturn(customerModel.getId());
+
+        ResponseEntity<UpdatedDTO> httpResponse = controller.deleteResource(customerModel.getId());
+
+        Assert.assertEquals(httpResponse.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(httpResponse.getBody().getId(), updatedDTODELETED.getId());
+        Assert.assertEquals(httpResponse.getBody().getState(), updatedDTODELETED.getState());
+    }
+
+    @Test
     void getCustomerPointsReward() {
-        Mockito.when(rewardService.getTransactionsFromCustomerBetweenDates(any(), any(), any())).thenReturn(transactionRewardList);
+        Mockito.when(service.getCustomerPointsReward(any(), any(), any())).thenReturn(transactionRewardList);
 
         ResponseEntity<RewardDTO> httpResponse = controller.getCustomerPointsReward(customerModel.getId(), new Date(), new Date());
 

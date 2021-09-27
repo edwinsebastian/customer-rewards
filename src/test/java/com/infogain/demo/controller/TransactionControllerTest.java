@@ -1,6 +1,7 @@
 package com.infogain.demo.controller;
 
 import com.infogain.demo.enums.ResourceStateEnum;
+import com.infogain.demo.exception.ResourceNotFoundException;
 import com.infogain.demo.model.*;
 import com.infogain.demo.service.TransactionServiceImpl;
 import org.junit.Assert;
@@ -34,6 +35,7 @@ class TransactionControllerTest {
 
     static UpdatedDTO updatedDTOCREATED;
     static UpdatedDTO updatedDTOUPDATED;
+    static UpdatedDTO updatedDTODELETED;
 
     static double transactionValue;
     static Date transactionDate;
@@ -51,6 +53,7 @@ class TransactionControllerTest {
 
         updatedDTOCREATED = new UpdatedDTO(transactionModel.getId(), ResourceStateEnum.CREATED);
         updatedDTOUPDATED = new UpdatedDTO(transactionModel.getId(), ResourceStateEnum.UPDATED);
+        updatedDTODELETED = new UpdatedDTO(transactionModel.getId(), ResourceStateEnum.DELETED);
     }
 
     @Test
@@ -101,5 +104,16 @@ class TransactionControllerTest {
         Assert.assertEquals(httpResponse.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(httpResponse.getBody().getId(), updatedDTOUPDATED.getId());
         Assert.assertEquals(httpResponse.getBody().getState(), updatedDTOUPDATED.getState());
+    }
+
+    @Test
+    void deleteResource() {
+        Mockito.when(service.deleteEntity(any())).thenReturn(transactionModel.getId());
+
+        ResponseEntity<UpdatedDTO> httpResponse = controller.deleteResource(transactionModel.getId());
+
+        Assert.assertEquals(httpResponse.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(httpResponse.getBody().getId(), updatedDTODELETED.getId());
+        Assert.assertEquals(httpResponse.getBody().getState(), updatedDTODELETED.getState());
     }
 }
